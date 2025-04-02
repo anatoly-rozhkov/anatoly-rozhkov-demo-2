@@ -1,6 +1,5 @@
 from fastapi import APIRouter
-
-# from routers.line_provider.event_router import router as line_provider_router
+from routers.bet_maker.event_router import router as event_router
 
 main_router = APIRouter(prefix="/api")
-# main_router.include_router(line_provider_router, tags=["Events"])
+main_router.include_router(event_router, tags=["Events"])

@@ -18,7 +18,6 @@ class RedisSettings(BaseModel):
     host: str
     port: int
     password: SecretStr
-    device_command_public_keys_var: str
 
 
 class Settings(BaseSettings):

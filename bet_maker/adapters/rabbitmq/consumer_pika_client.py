@@ -1,4 +1,5 @@
 import logging
+import pickle
 
 import aio_pika
 import aio_pika.abc
@@ -37,7 +38,8 @@ class PikaConsumerClient:
                 async for message in queue_iter:
                     async with message.process():
                         try:
-                            logger.warning("Received message %s", message.body)
-                            # await store_in_redis(message)
+                            received_message: dict = pickle.loads(message.body)
+                            logger.warning("Received message %s", received_message)
+                            await store_in_redis(received_message)
                         except Exception as redis_exception:
                             logger.error("Message failed to add to redis. Details: %s", redis_exception, exc_info=True)

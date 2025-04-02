@@ -1,21 +1,21 @@
 import pickle
 
 from adapters.redis.redis_client import redis_client
-from core.settings import settings
 
 
-async def store_in_redis(message) -> None:
-    created_data = pickle.loads(message.body)
-    await save_data(data=created_data)
+async def store_in_redis(message: dict) -> None:
+    await save_event(message)
 
 
-async def save_data(data: dict) -> None:
-    redis_keys_var = settings.redis.device_command_public_keys_var.format(redis_keys_var=data["id"])
-    instance: bytes | dict = await redis_client.get(redis_keys_var) or {}
+async def save_event(data: dict) -> None:
+    events: bytes = await redis_client.get("events")
+    events: list = pickle.loads(events) if events else []
 
-    if instance:
-        instance = pickle.loads(instance)
-    else:
-        instance["id"] = data["id"]
+    events.append(data)
 
-    await redis_client.set(redis_keys_var, pickle.dumps(instance))
+    await redis_client.set("events", pickle.dumps(events))
+
+
+async def get_events_for_redis() -> list:
+    events: bytes = await redis_client.get("events")
+    return pickle.loads(events) if events else []
