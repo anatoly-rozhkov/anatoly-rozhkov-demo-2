@@ -4,7 +4,7 @@ import pickle
 import aio_pika
 import aio_pika.abc
 from core.settings import settings
-from interactors.redis_interactors import store_in_redis
+from interactors.event_interactors import EventInteractor
 
 logger = logging.getLogger()
 
@@ -40,6 +40,6 @@ class PikaConsumerClient:
                         try:
                             received_message: dict = pickle.loads(message.body)
                             logger.warning("Received message %s", received_message)
-                            await store_in_redis(received_message)
-                        except Exception as redis_exception:
-                            logger.error("Message failed to add to redis. Details: %s", redis_exception, exc_info=True)
+                            await EventInteractor().create_event(received_message)
+                        except Exception as db_exception:
+                            logger.error("Message failed to add to DB. Details: %s", db_exception, exc_info=True)

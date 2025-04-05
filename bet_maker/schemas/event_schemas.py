@@ -1,16 +1,10 @@
 import decimal
-import enum
 from decimal import Decimal
-from typing import List, Union
+from typing import List
 
-from pydantic import UUID4, BaseModel, Field
-from schemas.base_schemas import BaseSchema
-
-
-class EventState(enum.Enum):
-    NEW = 1
-    FINISHED_WIN = 2
-    FINISHED_LOSE = 3
+from enums.event_enums import EventState
+from pydantic import BaseModel, Field
+from schemas.base_schemas import BaseResponseSchema, BaseSchema
 
 
 class BaseEventSchema(BaseSchema):
@@ -19,9 +13,9 @@ class BaseEventSchema(BaseSchema):
     state: EventState = Field(..., description="Event state")
 
 
-class ResponseEventSchema(BaseEventSchema):
-    id: Union[UUID4, str] = Field(description="Event ID")
+class EventResponseSchema(BaseResponseSchema, BaseEventSchema):
+    pass
 
 
 class EventListSchema(BaseModel):
-    events: List[ResponseEventSchema]
+    events: List[EventResponseSchema]

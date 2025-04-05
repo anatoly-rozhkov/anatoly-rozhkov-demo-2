@@ -1,6 +1,11 @@
 poetry-python:
 	source $(poetry env info --path)/bin/activate
 start:
+	@ sudo chown -R 1000:1000 docker/*
+	@ if [ ! -d "docker/data/db" ]; then \
+	    mkdir -p docker/data/db/data && \
+	    mkdir -p docker/data/db/backup; \
+	fi
 	docker compose up
 stop:
 	docker compose down

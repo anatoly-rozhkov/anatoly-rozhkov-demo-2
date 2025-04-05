@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from pydantic import BaseModel, SecretStr
+from pydantic import BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 load_dotenv()
@@ -13,11 +13,16 @@ class RabbitMQSettings(BaseModel):
     pika_consumer_queue_name: str
 
 
-class RedisSettings(BaseModel):
-    db_session: int
+class PostgresSettings(BaseModel):
     host: str
     port: int
-    password: SecretStr
+    user: str
+    password: str
+    db: str
+    pool_size: int
+
+    def get_dsn(self) -> str:
+        return f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
 
 
 class Settings(BaseSettings):
@@ -35,10 +40,10 @@ class Settings(BaseSettings):
     secret_key: str
     thread_pool_workers: int
     cors_origins: str = ""
-    base_url: str = "http://localhost:8000"
+    base_url: str = "http://localhost:8001"
 
     rabbit: RabbitMQSettings
-    redis: RedisSettings
+    postgres: PostgresSettings
 
 
 settings = Settings()

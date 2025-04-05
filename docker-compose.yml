@@ -1,23 +1,28 @@
 services:
-  demo_redis:
+  demo_db:
     user: 1000:1000
-    image: redis:6.0-alpine
-    container_name: demo_reddis
+    image: postgres:13-alpine
+    container_name: demo_db
     restart: always
-    environment:
-      - REDIS__PASSWORD=${REDIS__PASSWORD}
-    command: [ "redis-server", "--requirepass", "${REDIS__PASSWORD}" ]
     networks:
       - demo_network
+    environment:
+      - POSTGRES_USER=${POSTGRES__USER}
+      - POSTGRES_PASSWORD=${POSTGRES__PASSWORD}
+      - POSTGRES_HOST=${POSTGRES__HOST}
+      - POSTGRES_DB=${POSTGRES__DB}
+      - POSTGRES_HOST_AUTH_METHOD=trust
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U demo -d demo'" ]
       interval: 10s
-      timeout: 5s
+      timeout: 10s
       retries: 5
     volumes:
-      - ./docker/data/redis:/data
+      - ./docker/data/db/data:/var/lib/postgresql/data
+      - ./docker/data/db/backup:/backup
+      - ./etc/init-user.sql:/docker-entrypoint-initdb.d/init-user.sql
     ports:
-      - 6378:6379
+      - "7432:5432"
 
   bet_maker_app:
     build:
@@ -31,6 +36,8 @@ services:
       - ./bet_maker:/app/src
     networks:
       - demo_network
+    depends_on:
+      - demo_db
     ports:
       - "8081:80"
 

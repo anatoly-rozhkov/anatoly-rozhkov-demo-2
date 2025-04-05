@@ -1,8 +1,8 @@
 from core.error_handlers.base_error_handlers import (
     custom_base_errors_handler, pydantic_validation_errors_handler)
 from core.errors.base_error import BaseError
+from core.lifespan import lifespan
 from core.settings import settings
-from core.utils.lifespan import lifespan
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from routers.main_router import main_router
