@@ -17,7 +17,7 @@ async def lifespan(app: FastAPI):
         yield
     finally:
         task.cancel()
-        Database(settings.postgres.db).close()
+        await Database(settings.postgres.db).close()
         try:
             await task
         except asyncio.CancelledError:

@@ -3,6 +3,8 @@ import uuid
 from datetime import datetime, timezone
 from typing import Sequence, cast
 
+from adapters.db.postgres import Database
+from enums.event_enums import EventState
 from fastapi import APIRouter, FastAPI, HTTPException
 from interactors.bet_interactor import BetInteractor
 from interactors.event_interactors import EventInteractor
@@ -19,7 +21,7 @@ router = APIRouter(prefix="")
 async def create_bet(request: CreteBetSchema) -> BetResponseSchema:
     bet_id = uuid.uuid4()
     bet_interactor = BetInteractor()
-    event_interactor = EventInteractor()
+    event_interactor = EventInteractor(Database.get_instance())
 
     data = request.model_dump()
 
@@ -33,6 +35,8 @@ async def create_bet(request: CreteBetSchema) -> BetResponseSchema:
 
     if event.deadline < time.time():
         raise HTTPException(status_code=400, detail="Event has already expired. Please, select another event")
+    elif event.state != EventState.NEW:
+        raise HTTPException(status_code=400, detail="Event has already completed. Please, select another event")
 
     await bet_interactor.create_bet(dict(id=bet_id, state=event.state, created_at=datetime.now(timezone.utc), **data))
 

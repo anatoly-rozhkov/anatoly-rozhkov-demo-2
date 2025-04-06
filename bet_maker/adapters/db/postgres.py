@@ -8,10 +8,14 @@ from sqlalchemy.ext.asyncio import (AsyncEngine, AsyncSession,
 
 
 class Database(metaclass=DBConnectionManagement):
-    def __init__(self):
-        self.engine: AsyncEngine = create_async_engine(
-            settings.postgres.get_dsn(), pool_size=settings.postgres.pool_size, echo=False
-        )
+    def __init__(self, instance_name: str, external: bool):
+
+        if external:
+            dsn = settings.postgres.get_external_dsn(instance_name)
+        else:
+            dsn = settings.postgres.get_dsn(instance_name)
+
+        self.engine: AsyncEngine = create_async_engine(dsn, pool_size=settings.postgres.pool_size, echo=False)
         self.session_class = sqlalchemy.orm.sessionmaker(bind=self.engine, class_=AsyncSession)
 
     async def set_tables(self):
@@ -25,5 +29,5 @@ class Database(metaclass=DBConnectionManagement):
         await self.engine.dispose()
 
     @classmethod
-    def get_instance(cls, instance_name: str = settings.postgres.db) -> "Database":
-        return cls(instance_name)
+    def get_instance(cls, instance_name: str = settings.postgres.db, external: bool = False) -> "Database":
+        return cls(instance_name, external)

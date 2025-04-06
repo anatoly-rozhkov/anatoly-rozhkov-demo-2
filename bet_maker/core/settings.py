@@ -21,8 +21,11 @@ class PostgresSettings(BaseModel):
     db: str
     pool_size: int
 
-    def get_dsn(self) -> str:
-        return f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
+    def get_dsn(self, db: str) -> str:
+        return f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{db}"
+
+    def get_external_dsn(self, db: str) -> str:
+        return f"postgresql+asyncpg://{self.user}:{self.password}@localhost:7432/{db}"
 
 
 class Settings(BaseSettings):

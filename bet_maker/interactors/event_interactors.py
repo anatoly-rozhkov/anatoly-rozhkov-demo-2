@@ -9,8 +9,8 @@ from sqlalchemy.future import select
 
 
 class EventRepository:
-    def __init__(self):
-        self.db = Database.get_instance()
+    def __init__(self, db: Database):
+        self.db = db
 
     async def get_valid_events(self) -> Sequence[Event]:
         async with self.db.get_session() as session:
@@ -44,8 +44,8 @@ class EventRepository:
 
 
 class EventInteractor:
-    def __init__(self, event_repository: EventRepository = None):
-        self.event_repository = event_repository or EventRepository()
+    def __init__(self, db: Database):
+        self.event_repository = EventRepository(db)
 
     async def get_valid_events(self) -> Sequence[Event]:
         return await self.event_repository.get_valid_events()

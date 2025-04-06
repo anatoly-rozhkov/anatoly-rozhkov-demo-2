@@ -3,6 +3,7 @@ import pickle
 
 import aio_pika
 import aio_pika.abc
+from adapters.db.postgres import Database
 from core.settings import settings
 from interactors.event_interactors import EventInteractor
 
@@ -40,6 +41,6 @@ class PikaConsumerClient:
                         try:
                             received_message: dict = pickle.loads(message.body)
                             logger.warning("Received message %s", received_message)
-                            await EventInteractor().update_or_create_event(received_message)
+                            await EventInteractor(Database.get_instance()).update_or_create_event(received_message)
                         except Exception as db_exception:
                             logger.error("Message failed to add to DB. Details: %s", db_exception, exc_info=True)
