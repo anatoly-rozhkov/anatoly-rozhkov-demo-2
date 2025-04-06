@@ -40,6 +40,6 @@ class PikaConsumerClient:
                         try:
                             received_message: dict = pickle.loads(message.body)
                             logger.warning("Received message %s", received_message)
-                            await EventInteractor().create_event(received_message)
+                            await EventInteractor().update_or_create_event(received_message)
                         except Exception as db_exception:
                             logger.error("Message failed to add to DB. Details: %s", db_exception, exc_info=True)

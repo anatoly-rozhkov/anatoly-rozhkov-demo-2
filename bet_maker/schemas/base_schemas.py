@@ -13,7 +13,7 @@ class BaseSchema(BaseModel):
         from_attributes = True
 
 
-class BaseResponseSchema:
+class BaseResponseSchema(BaseSchema):
     id: Union[UUID4, str] = Field(..., description="ID")
     name: str = Field(..., description="Name")
     created_at: datetime = Field(..., description="Created At")

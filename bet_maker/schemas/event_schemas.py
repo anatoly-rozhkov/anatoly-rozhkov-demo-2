@@ -1,6 +1,6 @@
 import decimal
 from decimal import Decimal
-from typing import List
+from typing import Sequence
 
 from enums.event_enums import EventState
 from pydantic import BaseModel, Field
@@ -18,4 +18,4 @@ class EventResponseSchema(BaseResponseSchema, BaseEventSchema):
 
 
 class EventListSchema(BaseModel):
-    events: List[EventResponseSchema]
+    results: Sequence[EventResponseSchema] = Field(..., description="List of bets")
