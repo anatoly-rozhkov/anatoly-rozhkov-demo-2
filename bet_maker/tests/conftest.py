@@ -53,7 +53,7 @@ async def async_client(create_new_database):
 
     app.dependency_overrides[Database.get_instance] = override_get_db
 
-    # I've probably spent 5 hours trying to figure out how to make mock dbs similar to django_db with that mf chatgpt.
+    # I've probably spent 3 hours trying to figure out how to make mock dbs similar to django_db with that mf chatgpt.
     # My figuring out how to do this despite all the misleading hints from gpt
     # is the greatest victory of humanity over machines to date
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://testserver") as client:
