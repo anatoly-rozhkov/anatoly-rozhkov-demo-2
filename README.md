@@ -20,7 +20,7 @@ make start
 WARNING:
 The command may ask for password to set perms to data directory.
 This is required for the database and I've setup permission setting for linux systems.
-Hope, you are fellow linux users cos idk how to do that staff on Mac.
+Hope, you are fellow linux users cos idk how to do that stuff on Mac.
 
 You can access swagger here, I've set the examples so that it would be easier to test.
 http://127.0.0.1:8081/docs
@@ -37,7 +37,7 @@ for this demo I had to learn a couple of things on the fly, which consumed
 like 80% of the time. 
 
 Just for you to make sure I'm aware of the limitations:
-- I really wanted to set alembic for efficient DB migrations, but I've spent to much 
+- I really wanted to set alembic for efficient DB migrations, but I've spent too much 
 time on the mock db, so I decided to skip it. Hope you will let it slide this time 
 (I haven't brought you croissants for no reason you know)
 - When deleting an event, effects on bets are not handled. I know, I know.
@@ -67,7 +67,7 @@ https://github.com/anatoly-rozhkov/anatoly-rozhkov-demo
 
 ### Finishing note
 Looking forward to working with you. I've used to work in 3-backend-dev setup, 
-so I'm really exited what tens of devs can do together.
+so I'm really exited to see what tens of devs can do together.
 
 Cheers,
 Anatoly Rozhkov
