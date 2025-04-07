@@ -44,7 +44,7 @@ time on the mock db, so I decided to skip it. Hope you will let it slide this ti
 I've decided to just leave it as is because there are plenty of other examples of 
 event processing in Bet Maker.
 - Haven't added pagination. Since it's tiny little app, I've decided to let it be
-(Please, just don't use it in pord until it's fixed)
+(Please, just don't use it in prod until it's fixed)
 - Haven't tidied up logic. The project has good structure as is, but in 
 a real setting it would have had an even better structure, I guess such things just don't
 come out perfect in a 3-hour coding session.
