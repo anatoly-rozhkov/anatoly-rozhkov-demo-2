@@ -1,5 +1,6 @@
-poetry-python:
-	source $(poetry env info --path)/bin/activate
+BET-MAKER=bet_maker
+export PYTHONPATH := $(PWD):$(PWD)/$(BET-MAKER)
+
 start:
 	@ sudo chown -R 1000:1000 docker/*
 	@ if [ ! -d "docker/data/db" ]; then \
@@ -16,3 +17,6 @@ inside-bet:
 format:
 	black --config black.toml .
 	isort .
+test:
+	export PYTHONPATH=$(PWD)/$(BET-MAKER); \
+	python -m pytest $(BET-MAKER)/tests/ -vv

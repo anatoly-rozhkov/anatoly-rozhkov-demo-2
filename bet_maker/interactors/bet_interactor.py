@@ -9,8 +9,8 @@ from sqlalchemy.future import select
 
 
 class BetRepository:
-    def __init__(self):
-        self.db = Database.get_instance()
+    def __init__(self, db: Database):
+        self.db = db
 
     async def get_bets(self) -> Sequence[Bet]:
         async with self.db.get_session() as session:
@@ -38,8 +38,8 @@ class BetRepository:
 
 
 class BetInteractor:
-    def __init__(self, bet_repository: BetRepository = None):
-        self.bet_repository = bet_repository or BetRepository()
+    def __init__(self, db: Database):
+        self.bet_repository = BetRepository(db)
 
     async def get_bets(self) -> Sequence[Bet]:
         return await self.bet_repository.get_bets()

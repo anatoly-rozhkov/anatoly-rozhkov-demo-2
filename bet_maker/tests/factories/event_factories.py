@@ -8,7 +8,7 @@ from enums.event_enums import EventState
 from tests.utils.factory_helpers import generate_random_string
 
 
-def event_factory(
+def event_dict_factory(
     name: str = generate_random_string(),
     state: EventState = EventState.NEW,
     coefficient: Decimal = Decimal(1.50),

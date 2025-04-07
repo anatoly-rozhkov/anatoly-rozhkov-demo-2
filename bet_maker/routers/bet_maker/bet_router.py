@@ -5,7 +5,7 @@ from typing import Sequence, cast
 
 from adapters.db.postgres import Database
 from enums.event_enums import EventState
-from fastapi import APIRouter, FastAPI, HTTPException
+from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from interactors.bet_interactor import BetInteractor
 from interactors.event_interactors import EventInteractor
 from pydantic import ValidationError
@@ -18,15 +18,14 @@ router = APIRouter(prefix="")
 
 
 @router.post("/bets/", status_code=status.HTTP_201_CREATED)
-async def create_bet(request: CreteBetSchema) -> BetResponseSchema:
+async def create_bet(request: CreteBetSchema, database: Database = Depends(Database.get_instance)) -> BetResponseSchema:
     bet_id = uuid.uuid4()
-    bet_interactor = BetInteractor()
-    event_interactor = EventInteractor(Database.get_instance())
+    bet_interactor = BetInteractor(db=database)
 
     data = request.model_dump()
 
     try:
-        event = await event_interactor.get_event_by_id(uuid.UUID(data["event_id"]))
+        event = await EventInteractor(db=database).get_event_by_id(uuid.UUID(data["event_id"]))
         if not event:
             raise HTTPException(status_code=404, detail="Event with this doesn't exist")
 
@@ -59,8 +58,8 @@ async def create_bet(request: CreteBetSchema) -> BetResponseSchema:
 
 
 @router.get("/bets/", status_code=status.HTTP_200_OK)
-async def get_bets() -> BetListSchema:
-    bets = await BetInteractor().get_bets()
+async def get_bets(database: Database = Depends(Database.get_instance)) -> BetListSchema:
+    bets = await BetInteractor(db=database).get_bets()
     try:
         return BetListSchema(results=cast(Sequence[BetResponseSchema], bets))
     except ValidationError:

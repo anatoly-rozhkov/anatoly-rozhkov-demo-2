@@ -34,7 +34,7 @@ class EventRepository:
                 state = True
 
         if state:
-            await BetInteractor().update_bet(update_data["id"], update_data["state"])
+            await BetInteractor(self.db.get_instance()).update_bet(update_data["id"], update_data["state"])
         return state
 
     async def create_event(self, event_data: dict) -> None:
